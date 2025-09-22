@@ -40,6 +40,7 @@ class Timer : public Node {
 	bool autostart = false;
 	bool processing = false;
 	bool paused = false;
+	bool elapsed = false;
 	bool ignore_time_scale = false;
 
 	double time_left = -1.0;
@@ -73,6 +74,7 @@ public:
 	bool is_ignoring_time_scale();
 
 	bool is_stopped() const;
+	bool is_elapsed() const;
 
 	double get_time_left() const;
 
