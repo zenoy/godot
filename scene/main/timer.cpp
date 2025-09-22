@@ -59,6 +59,7 @@ void Timer::_notification(int p_what) {
 					time_left += wait_time;
 				} else {
 					stop();
+					elapsed = true;
 				}
 
 				emit_signal(SNAME("timeout"));
@@ -80,6 +81,7 @@ void Timer::_notification(int p_what) {
 					time_left += wait_time;
 				} else {
 					stop();
+					elapsed = true;
 				}
 				emit_signal(SNAME("timeout"));
 			}
@@ -121,6 +123,7 @@ void Timer::start(double p_time) {
 	}
 	time_left = wait_time;
 	_set_process(true);
+	elapsed = false;
 }
 
 void Timer::stop() {
@@ -152,6 +155,14 @@ bool Timer::is_ignoring_time_scale() {
 
 bool Timer::is_stopped() const {
 	return get_time_left() <= 0;
+}
+
+bool Timer::is_elapsed() const {
+	return elapsed;
+}
+
+void Timer::set_elapsed(bool p_elapsed) {
+	elapsed = p_elapsed;
 }
 
 double Timer::get_time_left() const {
@@ -226,7 +237,9 @@ void Timer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("is_ignoring_time_scale"), &Timer::is_ignoring_time_scale);
 
 	ClassDB::bind_method(D_METHOD("is_stopped"), &Timer::is_stopped);
-
+	ClassDB::bind_method(D_METHOD("set_elapsed", "elapsed"), &Timer::set_elapsed);
+	ClassDB::bind_method(D_METHOD("is_elapsed"), &Timer::is_elapsed);
+	
 	ClassDB::bind_method(D_METHOD("get_time_left"), &Timer::get_time_left);
 
 	ClassDB::bind_method(D_METHOD("set_timer_process_callback", "callback"), &Timer::set_timer_process_callback);
@@ -239,6 +252,7 @@ void Timer::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "one_shot"), "set_one_shot", "is_one_shot");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "autostart"), "set_autostart", "has_autostart");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "paused", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_paused", "is_paused");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "elapsed", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_elapsed", "is_elapsed");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "ignore_time_scale"), "set_ignore_time_scale", "is_ignoring_time_scale");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "time_left", PROPERTY_HINT_NONE, "suffix:s", PROPERTY_USAGE_NONE), "", "get_time_left");
 
